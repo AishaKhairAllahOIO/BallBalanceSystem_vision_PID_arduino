@@ -51,3 +51,13 @@ while True:
                 cv2.circle(frame, center, 5, (0, 0, 255), -1)
                 cv2.putText(frame, f"X: {int(x)}, Y: {int(y)}", (10, 30), 
                 cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 0), 2)
+
+    cv2.imshow("Ball Tracking", frame)
+    cv2.imshow("Mask", mask_clean)
+
+
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+
+cap.release()
+cv2.destroyAllWindows()            
