@@ -18,3 +18,20 @@ yellow=[0,255,255]
 cap=cv2.VideoCapture(2)
 
 lower_color,upper_color=get_limits(color=yellow)
+
+while True:
+    ret, frame = cap.read()
+    if not ret:
+        break
+
+    frame = cv2.flip(frame, 1)
+
+    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+
+    mask = cv2.inRange(hsv, lower_color, upper_color)
+
+    blurred = cv2.GaussianBlur(mask, (9, 9), 0)
+
+    kernel = np.ones((5,5), np.uint8)
+    mask_clean = cv2.morphologyEx(blurred, cv2.MORPH_OPEN, kernel)
+    mask_clean = cv2.morphologyEx(mask_clean, cv2.MORPH_CLOSE, kernel)
