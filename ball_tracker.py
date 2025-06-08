@@ -35,3 +35,19 @@ while True:
     kernel = np.ones((5,5), np.uint8)
     mask_clean = cv2.morphologyEx(blurred, cv2.MORPH_OPEN, kernel)
     mask_clean = cv2.morphologyEx(mask_clean, cv2.MORPH_CLOSE, kernel)
+
+    contours, _ = cv2.findContours(mask_clean, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+    if contours:
+        c = max(contours, key=cv2.contourArea)
+        ((x, y), radius) = cv2.minEnclosingCircle(c)
+
+        M = cv2.moments(c)
+        if M["m00"] > 0:
+            center = (int(M["m10"]/M["m00"]), int(M["m01"]/M["m00"]))
+            
+            if radius > 10:
+                cv2.circle(frame, (int(x), int(y)), int(radius), (0, 255, 0), 2)
+                cv2.circle(frame, center, 5, (0, 0, 255), -1)
+                cv2.putText(frame, f"X: {int(x)}, Y: {int(y)}", (10, 30), 
+                cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 0), 2)
