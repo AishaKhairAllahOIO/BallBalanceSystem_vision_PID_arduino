@@ -1,6 +1,8 @@
 import cv2
 import numpy as np
 
+latest_coordinates=None
+
 def get_limits(color):
 
     c=np.uint8([[color]])
@@ -18,6 +20,10 @@ yellow=[0,255,255]
 cap=cv2.VideoCapture(2)
 
 lower_color,upper_color=get_limits(color=yellow)
+
+def get_coordinates():
+    global latest_coordinates
+    return latest_coordinates
 
 while True:
     ret, frame = cap.read()
@@ -45,6 +51,7 @@ while True:
         M = cv2.moments(c)
         if M["m00"] > 0:
             center = (int(M["m10"]/M["m00"]), int(M["m01"]/M["m00"]))
+            latest_coordinates=center
             
             if radius > 10:
                 cv2.circle(frame, (int(x), int(y)), int(radius), (0, 255, 0), 2)
