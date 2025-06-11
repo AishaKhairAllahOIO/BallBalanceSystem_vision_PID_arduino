@@ -11,10 +11,8 @@ def get_limits(color):
     lowerLimit=hsv[0][0][0]-10,100,100
     upperLimit=hsv[0][0][0]+10,255,255
 
-    lowerLimit=np.array(lowerLimit,dtype=np.uint8)
-    upperLimit=np.array(upperLimit,dtype=np.uint8)
+    return np.array(lowerLimit,dtype=np.uint8),np.array(upperLimit,dtype=np.uint8)
 
-    return lowerLimit,upperLimit
 
 yellow=[0,255,255]
 cap=cv2.VideoCapture(2)
@@ -27,16 +25,17 @@ def get_coordinates():
 
 while True:
     ret, frame = cap.read()
+    frame = cv2.resize(frame, (400, 300))
     if not ret:
         break
 
-    frame = cv2.flip(frame, 1)
+    frame = cv2.flip(frame,1)
 
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
     mask = cv2.inRange(hsv, lower_color, upper_color)
 
-    blurred = cv2.GaussianBlur(mask, (9, 9), 0)
+    blurred = cv2.GaussianBlur(mask, (9,9), 0)
 
     kernel = np.ones((5,5), np.uint8)
     mask_clean = cv2.morphologyEx(blurred, cv2.MORPH_OPEN, kernel)
